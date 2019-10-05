@@ -5,7 +5,7 @@ Development of a web application dedicated to interactive visualization of open 
 
 -Grayscale bootstrap template
 
--Python for data processing this [dataset]{https://www.kaggle.com/etiennelq/french-employment-by-town?fbclid=IwAR083yg_9eAoxRbVeQLXJyznXz9AvOg-lG2TcscmtpNTeq8nBCECHX3O1HI#population.csv}.
+-Python for data processing this [dataset](https://www.kaggle.com/etiennelq/french-employment-by-town?fbclid=IwAR083yg_9eAoxRbVeQLXJyznXz9AvOg-lG2TcscmtpNTeq8nBCECHX3O1HI#population.csv).
 
 -Javascript + Chart.js library for charting
 
