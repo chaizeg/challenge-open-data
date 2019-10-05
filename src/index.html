@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Challenge Open Data</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/grayscale.min.css" rel="stylesheet">
+
+
+  <!--Map using Leaflet-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+    crossorigin=""></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  <!--Chart.js-->
+  <script src="dist/2.8.0/Chart.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"> </script>
+
+
+  <style>
+    canvas {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+  </style>
+
+  <style>
+    /* The switch - the box around the slider */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #576866;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked+.slider {
+      background-color: #96cec8;
+    }
+
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+  </style>
+
+  <style>
+    /* Customize the label (the container) */
+    .container {
+      display: block;
+      position: relative;
+      padding-left: 35px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      font-size: 22px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 25px;
+      width: 25px;
+      background-color: #576866;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container:hover input~.checkmark {
+      background-color: #576866;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .container input:checked~.checkmark {
+      background-color: #96cec8;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container input:checked~.checkmark:after {
+      display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container .checkmark:after {
+      left: 9px;
+      top: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+  </style>
+
+  <style>
+    .legend {
+      line-height: 18px;
+      color: #555;
+    }
+
+    .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+    }
+
+    .info {
+      padding: 6px 8px;
+      font: 14px/16px Arial, Helvetica, sans-serif;
+      background: white;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+
+    .info h4 {
+      margin: 0 0 5px;
+      color: #777;
+    }
+  </style>
+
+  <!-- ScrollBar -->
+  <style>
+    .scrollbar {
+      margin-left: 30px;
+      float: left;
+      height: 300px;
+      width: 65px;
+      background: #F5F5F5;
+      overflow-y: scroll;
+      margin-bottom: 25px;
+    }
+
+    .force-overflow {
+      min-height: 450px;
+    }
+
+    #style-1::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      background-color: #F5F5F5;
+    }
+
+    #style-1::-webkit-scrollbar {
+      width: 12px;
+      background-color: #F5F5F5;
+    }
+
+    #style-1::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+      background-color: #555;
+    }
+  </style>
+
+
+</head>
+
+
+
+
+<body id="page-top" ng-app="myApp" ng-controller="myCtrl">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="#page-top">Challenge Open Data</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+        data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+        aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#about">Viz</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="rapport.html">Rapport</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="masthead">
+    <div class="container d-flex h-100 align-items-center">
+      <div class="mx-auto text-center">
+        <h1 class="mx-auto my-0 text-uppercase">Observatoire des inégalités</h1>
+        <h2 class="text-white-50 mx-auto mt-2 mb-5">Visualisation des inégalités salariales en France.</h2>
+        <a href="#about" class="btn btn-primary js-scroll-trigger">Commencer</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- About Section -->
+  <section id="about" class="projects-section bg-light">
+    <!-- Step 1 -->
+    <div id="container container-chart" style="width:90%; margin: auto; ">
+      <h2 class="mx-auto my-0 text-uppercase">1- Sélectionner une ou plusieurs régions (Max 3)</h1>
+        <br>
+        <div id="mapid" style="width: 90%; height: 400px; margin: auto; border-radius: 5px 5px 5px 5px;"></div>
+        <script src="./js/map.js" defer></script>
+    </div>
+    <br>
+    <br>
+    <!-- Step 2 -->
+    <div id="container container-chart" style="width:90%; margin: auto; ">
+      <h2 class="mx-auto my-0 text-uppercase">2- Choisir un ou plusieurs critères</h1>
+        <br>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <Strong>Combinaisons possibles de critères : </strong>
+            <br/>
+            <u><span> 1- Pour une ou plusieurs régions sélectionnées : </span></u>
+            <li>Age </li> <li> Sexe</li> <li>Poste</li> 
+            <u><span> 2- Pour une seule région sélectionnée : </span></u>
+            <li>Age-Sexe</li> <li>Sexe-Poste</li>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <br>
+        <br>
+
+        <div style="text-align: center">
+          Tranche d'age
+          <label class="switch">
+            <input type="checkbox" id="Age" name="age">
+            <span class="slider round"></span>
+          </label>
+
+          Sexe
+          <label class="switch">
+            <input type="checkbox" id="Sexe" name="sexe">
+            <span class="slider round"></span>
+          </label>
+
+          Poste
+          <label class="switch">
+            <input type="checkbox" id="Poste" name="poste">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <!--automatically ticked if parent filter is checked -->
+
+        <div id="sexeChoice" style="display:none">
+          <label class="container">Homme
+            <input type="checkbox" id="homme" name="optionSexeOne" class="optionsSexe" disabled>
+            <span class="checkmark"></span>
+          </label>
+
+          <label class="container">Femme
+            <input type="checkbox" id="femme" name="optionSexeTwo" class="optionsSexe" disabled>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+
+        <div id="posteChoice" style="display:none">
+          <label class="container">PDG
+            <input type="checkbox" id="pdg" name="optionPosteOne" class="optionsPoste" disabled>
+            <span class="checkmark"></span>
+          </label>
+          <label class="container">Manager
+            <input type="checkbox" id="middleManager" name="optionPosteTwo" class="optionsPoste" disabled>
+            <span class="checkmark"></span>
+          </label>
+          <label class="container">Employé(e)
+            <input type="checkbox" id="employee" name="optionPosteThree" class="optionsPoste" disabled>
+            <span class="checkmark"></span>
+          </label>
+          <label class="container">Ouvrier(e)
+            <input type="checkbox" id="worker" name="optionPosteFour" class="optionsPoste" disabled>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+
+        <div id="ageChoice" style="display:none">
+          <label class="container">18-25 ans
+            <input type="checkbox" id="18" name="optionAgeOne" class="optionsAge" disabled>
+            <span class="checkmark"></span>
+          </label>
+          <label class="container">26-50 ans
+            <input type="checkbox" id="26" name="optionAgeTwo" class="optionsAge" disabled>
+            <span class="checkmark"></span>
+          </label>
+          <label class="container">> 50 ans
+            <input type="checkbox" id="50" name="optionAgeThree" class="optionsAge" disabled>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <br>
+        <br>
+        <div class="mx-auto text-center">
+          <a href="#container-chart" class="btn btn-primary js-scroll-trigger">Visualiser</a>
+          <br>
+          <br>
+        </div>
+        <br>
+        <br>
+        <hr>
+
+    </div>
+    <!-- Step 3 -->
+    <div id="container container-chart" name="container-chart" style="width:70%; margin: auto;">
+      <h2 class="mx-auto my-0 text-uppercase">3- Visualisation</h1>
+        <br>
+        <div>
+        <canvas id="canvas"></canvas>
+      </div>
+        <br>
+        <div>
+        <canvas id="canvasTwo" style="display: none;"></canvas>
+      </div>
+    </div>
+    
+
+  </section>
+
+
+
+  <section class="bg-light" style="height: 100px;">
+
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black small text-center text-white-50">
+    <div class="container">
+      Copyright &copy; Challenge Open Data 2019-2020
+      <br/>
+      <small>Image credits: Shutterstock</small>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/grayscale.min.js"></script>
+
+  <!--Main js-->
+  <script src="./js/main.js"></script>
+</body>
+
+</html>

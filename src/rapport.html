@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Challenge Open Data</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/grayscale.min.css" rel="stylesheet">
+
+
+  <!--Map using Leaflet-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+    crossorigin=""></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  <!--Chart.js-->
+  <script src="dist/2.8.0/Chart.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"> </script>
+
+    <style>
+
+        .rapport-header {
+            height: 300px !important;
+        }
+
+    </style>
+
+</head>
+
+
+
+
+<body id="page-top" ng-app="myApp" ng-controller="myCtrl">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="./index.html">Challenge Open Data</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+        data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+        aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="index.html">Viz</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="rapport.html">Rapport</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="masthead rapport-header">
+    <div class="container d-flex h-100 align-items-center">
+      <div class="mx-auto text-center">
+        <h1 class="mx-auto my-0 text-uppercase">Rapport de réalisation</h1>
+        <a href="#rapport" class="btn btn-primary js-scroll-trigger">Lire</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- About Section -->
+  <section id="rapport" class="projects-section bg-light">
+    <!-- Step 1 -->
+    <div id="container container-chart" style="width:960px; margin: auto; ">
+		<h1 id="challengeopendata">Challenge open data</h1>
+
+        <p>Réalisé par:
+            <ul>
+                <li>Nasr Ayoub</li>
+                <li>Zegoumou Chaimaa</li>
+                <li>Tamenaoul Hamza</li>
+                <li>Maaraki Zakaria</li>
+                <li>Halably Kenza</li>
+            </ul>
+        </p>
+
+		<h2 id="introduction">Introduction</h2>
+
+		<p>Cette WebApp a été développée dans le cadre du Challenge Open Data; le but principal étant de permettre à l’utilisateur de visualiser et de parcourir un grand jeu de données de manière interactive, simplifiée. L’application que nous avons réalisé pour ce projet vise à visualiser les inégalités de revenu entre différentes catégories d’individus en France. En effet, ces individus ont été catégorisé par sexe, tranche d’âge, poste, et région géographique.</p>
+
+		<h2 id="jeudedonnes">Jeu de données</h2>
+
+		<p>Le jeu de données choisi provient du site web  <a href="https://www.kaggle.com/etiennelq/french-employment-by-town">Kaggle</a>. Il s'agit du compte rendu d’un recensement conduit par l’INSEE en 2014 sur l’ensemble des villes françaises. Il contient les tables suivantes:</p>
+
+		<ul>
+		<li>entreprises classées par nombre d'employés par ville.</li>
+
+		<li>salaires moyens des citoyens par ville, âge, sexe, et poste.</li>
+
+		<li>population de chaque ville par âge et sexe.</li>
+
+		<li>données géographiques : région et département de chaque ville. </li>
+		</ul>
+
+		<p>Ces données font 344Mo de taille; il était alors évident qu'il fallait faire un bon travail de filtrage et de sélection de données pertinentes à notre vision de ce projet. Ainsi, initialement, en format CSV, on a retenu la table des salaires ainsi que celle des données géographiques.
+		On a également utilisé un <a href="https://github.com/gregoiredavid/france-geojson/blob/298b2cf21ebe12be4dafcf22b3ca6c6cb4f9e225/regions.geojson">fichier geojson</a> qui décrit les contours de chaque région de France en 2014.</p>
+
+		<h2 id="traitements">Traitements</h2>
+
+		<p>A partir des deux fichiers selectionnés, on a extrait les salaires moyens des citoyens par âge, sexe, poste par région.
+		Ceci est réalisé en employant un script Python qui calcule la moyenne de chaque valeur des salaires (par âge, sexe, poste) pour toutes les villes d'une région. Le script formatte le résultat final au format JSON pour qu'il soit directement placé dans le code de la page web.</p>
+
+		<p>Ainsi le but principal du traitement est l'agrégation des données comprises dans les fichiers CSV. Vu que ces dernières ont été recueillies du site Kaggle, elles ont déjà été prétraitées, et donc bien organisées. Cependant, elles représentent des données pour différentes villes françaises, alors que ce qui nous intéresse dans notre cas est l'ensemble des régions. C'est pour cette raison qu'il a fallu réaliser ce traitement en amont. </p>
+		<h2 id="visualisations">Visualisations</h2>
+
+		<h3 id="limitations">Limitations</h3>
+
+		<p>Le jeu de données présente une limitation autour de laquelle on a dû concevoir l'outil de visualisation:
+		Les moyennes des salaires sont faites par sexe, par âge, et par position mais on n'y trouve pas toutes les combinaisons possibles de ces trois critères. Les critères présentés par le jeu de données sont:</p>
+
+		<ul>
+		<li>âge</li>
+
+		<li>sexe</li>
+
+		<li>position</li>
+
+		<li>sexe + position</li>
+
+		<li>sexe + âge</li>
+		</ul>
+
+		<p>Un premier challenge de la visualisation était de créer une interface qui interdit la selection d'autres combinaisons sans tout de même limiter l'utilité de la page web. </p>
+
+		<h3 id="interface">Interface</h3>
+
+		<p>On s'est concentrés tout au long du projet sur la conception d'une interface simple et intuitive.
+		L'utilisateur se retrouve face à un écran d'accueil avec le bouton "Commencer" qui défile la page vers le bas, où l'on retrouve une carte qui met en avant les différentes régions. L'utilisateur peut sélectionner une ou plusieurs régions sur la carte.
+		Au dessous de la carte, On retrouve des sélecteurs pour les critères que l'utilisateur peut choisir.
+		Un graphe est généré en dessous des sélecteurs à chaque nouvelle sélection.</p>
+
+		<h3 id="lacarte">La carte</h3>
+
+		<p>Le rendu de la carte est fait à l'aide de l'<a href="https://leafletjs.com">API Leaflet</a>. On y ajoute le fichier geojson des régions géographiques pour les mettre en avant. Cet API permet de spécifer des callbacks pour les actions de l'utilisateur sur la carte, comme la génération de nouveaux graphes à la sélection ou à la désélection d'une région.</p>
+
+		<h3 id="lesgraphes">Les graphes</h3>
+
+        <h4>Les Barplots</h4>
+
+		<p>Les graphes sont générés à l'aide de l'API <a href="https://www.chartjs.org/">Chart.js</a> à partir des données traitées.
+		Vu que nos données concernent uniquement l'année 2014, et sont alors fixes dans le temps, il était clair qu'on n'allait pas utiliser des graphes du type 'Line' ou 'area'. La relation de causalité entre un facteur X et le salaire n'est pas non plus explorée; d'où le manque d'intérêt à un graphe X-Y. </p>
+
+		<p>Le choix d'un graphe du type 'pie chart' était uniquement limité à la combinaison (1 région + sexe); afin de montrer l'inégalité flagrante entre le salaire des hommes et celui des femmes.</p>
+
+		<p>Le reste des graphes est présenté soit sous forme de 'barplots', qui sont intéressants en terme de visualisation pour plusieurs catégories (par exemple pour les différents postes ou les multiples tranches d'âge..), ou, dans le cas
+      de la combinaison (plusieurs régions + poste)/(plusieurs régions+âge), sous forme de 'radar plots', afin d'explorer plus en détail l'inégalité entre les régions sélectionnées par rapport à chaque sous-catégorie du second critère choisi.  </p>
+
+		<p>Quant au choix des couleurs, on a utilisé les couleurs classiques pour représenter le sexe (rouge pour femmes et bleu pour hommes), des couleurs représentant le niveau d'énergie classiquement connu pour les tranches d'âge (jaune pour 18-25 ans, orange pour 26-50 ans et violet pour plus de 50 ans), ainsi qu'une sélection de couleurs polychromatiques pour les postes afin de faire la différence entre ces différentes catégories.</p>
+
+        <h4>Les Radarplots</h4>
+
+        <p>Les Radarplots sont destinés à montrer de façon très visuelle une comparaison entre deux entités dotées de plusieurs caractéristiques, il devient alors plus facile de comparer entre plusieurs régions selon une seule caractéristique (par exemple: la tranche d'âge 18-25 ans..).
+           Certes, les Barplots permettent de fournir une visualisation claire des grandeurs des différents paramètres, cependant, ils ne fournissent l'information supplémentaire qu'offrent les Radarplots.</p>
+
+
+        <p>Ainsi, le Radarplot est l'outil idéal pour voir plus clairement l'ampleur de l'inégalité entre les différentes régions.</p>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="bg-black small text-center text-white-50">
+    <div class="container">
+      Copyright &copy; Challenge Open Data 2019-2020
+    </div>
+    <small>Image credits: Shutterstock</small>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/grayscale.min.js"></script>
+
+  <!--Main js-->
+  <script src="./js/main.js"></script>
+</body>
+
+</html>
